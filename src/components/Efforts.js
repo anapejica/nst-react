@@ -15,7 +15,7 @@ export default class Efforts extends Component{
         };   
     }
     componentDidMount(){
-        axios.get('http://localhost:8080/projects')
+        axios.get('http://localhost:8080/projects', {headers:{'managerId': localStorage.getItem("managerId")}})
         .then(res=>{
             console.log(res.data);
             let data = res.data;
@@ -61,8 +61,8 @@ export default class Efforts extends Component{
                 <TableHeaderColumn width ={'20%'} dataField='hours'>Hours</TableHeaderColumn>     
             </BootstrapTable>
 
-               <button disabled={hidden.display} onClick={(e)=>{this.add(e)}}>Dodaj novi ucinak</button>
-
+               <button disabled={hidden.display} onClick={(e)=>{this.add(e)}}>Add new effort</button>
+               <button disabled={hidden.display}  onClick={e=>this.props.history.push("/adminmain")} style={{float:'right'}}>Back to Home page</button>
             </div>
             </div>
          

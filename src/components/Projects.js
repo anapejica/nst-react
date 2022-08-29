@@ -22,7 +22,6 @@ export default class Projects extends Component{
 
         this.state={
             projects:[],
-            //izabraniRed:null,
             isHidden:true,
             issues:[],
             isHid:''
@@ -34,7 +33,13 @@ export default class Projects extends Component{
         this.tabelIssues = React.createRef();
     }
     componentDidMount(){
-        axios.get('http://localhost:8080/projects')
+        console.log("manager ID" + localStorage.getItem("managerId"))
+        var headers = {
+            'headers': {
+                'managerId': localStorage.getItem("managerId")
+            }
+            }
+        axios.get('http://localhost:8080/projects', headers)
         .then(res=>{
            
             let projects=res.data.map(el=>{el.type=el.type.typeName;return el;});
@@ -79,6 +84,10 @@ export default class Projects extends Component{
         e.preventDefault();
         this.props.history.push({pathname:'/newproject'});
     }
+    goToPage(page,e){
+      e.preventDefault();
+      this.props.history.push('/'+page);
+  }
     render(){
         var selectRowProp = {
                 mode: 'radio',
@@ -105,7 +114,7 @@ export default class Projects extends Component{
                 <TableHeaderColumn width ={'20%'} dataField='type'>Type</TableHeaderColumn>
             </BootstrapTable>
                  <button disabled={hidden.display} onClick={(e)=>{this.AddNewProject(e)}}>Add New Project</button>
-
+                 <button disabled={hidden.display}  onClick={e=>this.props.history.push("/adminmain")} style={{float:'right'}}>Back to Home page</button>
          
             {tabelIssues}
 

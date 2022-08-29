@@ -19,13 +19,12 @@ export default class NewEffort extends Component{
     }
        this.handleDataChange = this.handleDataChange.bind(this);
        this.handleIssueChange = this.handleIssueChange.bind(this);
-   //    this.renderEffortTbl = this.renderEffortTbl.bind(this);
        this.getIssues = this.getIssues.bind(this);
        this.issueCombo = React.createRef();
     };
     
     componentDidMount(){
-    axios.get('http://localhost:8080/projects')
+    axios.get('http://localhost:8080/projects', {headers:{'managerId': localStorage.getItem("managerId")}})
     .then(res=>{
         let projects=res.data;
         this.setState({projects});
@@ -76,7 +75,6 @@ export default class NewEffort extends Component{
      let issues = this.getIssues(this.state.project)
 
      return(
-      // <NewEffortTbl ref={this.issueCombo} projects={proj}/>
       <p><Select
           placeholder="Choose issue"
           onChange={(value)=>this.handleIssueChange("issue",value)}
@@ -118,6 +116,7 @@ export default class NewEffort extends Component{
           {issueCombo}
           {effortTbl}
       </form>
+      <button onClick={e=>this.props.history.push("/adminmain")} style={{float:'right'}}>Back to Home page</button>
 </div>
         );
     

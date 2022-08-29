@@ -46,7 +46,7 @@ export default class Employees extends Component{
                     window.location.reload();
                 })
                 .catch(function(error){
-                    console.log(error);
+                    Swal.fire(error.response.data);
                 })
 
         }
@@ -119,9 +119,13 @@ export default class Employees extends Component{
          
           <button disabled={hidden.display} onClick={(e)=>{this.addNewEmployee(e)}} style={{marginRight:10}}>Add</button>
              <button disabled={hidden.display}  onClick={(e)=>{this.deleteEmployee(e)}} style={{marginRight:10}}>Delete</button>
-             <button disabled={hidden.display}  onClick={e=>this.updateEmployee(e)}>Update</button>
+             <button disabled={hidden.display}  onClick={e=>this.updateEmployee(e)} >Update</button>
+             <button disabled={hidden.display}  onClick={e=>this.props.history.push("/adminmain")} style={{float:'right'}}>Back to Home page</button>
             </div>
+        
             </div>
+           
          );
+         
        }
 }

@@ -36,47 +36,42 @@ export default class NewProject extends Component{
 
     submit=e=>{
         e.preventDefault();
-        var headers = {
-        'headers': {
-            'Content-Type': 'application/json;charset=UTF-8'
-        }
-        }  
-        console.log(this.state);
-            var data = {
-
-                    projectName:this.state.projectName,
-                    description:this.state.description,
-                    startDate:format(this.state.startDate,'yyyy-MM-dd'),
-                    endDate:format(this.state.endDate,'yyyy-MM-dd'),
-                    type:{ typeId:this.state.type.value},
-                    issues: this.state.issues
-             
-             }
+        console.log(this.state.projectName)
+        if((this.state.projectName.length==0) || (this.state.description.length==0) || (this.state.startDate.length==0) || (this.state.endDate.length==0) || (this.state.type.length==0)){
+            Swal.fire('Fields can not be empty', '', 'error'); 
         
-             
-        axios.post('http://localhost:8080/projects/add', data, headers)
-            .then((res) => {
-            Swal({
-                position: 'center',
-                type: 'success',
-                title: 'Uspesno dodat novi projekat',
-                showConfirmButton: false,
-                timer: 1500
-            })
-      //      this.setState({gotovo:true});
-        this.props.history.push({pathname:'/projects'});
-            })
-            .catch((err) => {
-                Swal({
-                    type:'error',
-                    text:'Nisu dobro uneti podaci!'
-                });
-            });
+        } else {
+            var headers = {
+                'headers': {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'managerId': localStorage.getItem("managerId")
+                }
+                }  
     
-
+                    var data = {
+    
+                            projectName:this.state.projectName,
+                            description:this.state.description,
+                            startDate:format(this.state.startDate,'yyyy-MM-dd'),
+                            endDate:format(this.state.endDate,'yyyy-MM-dd'),
+                            type:{ typeId:this.state.type.value},
+                            issues: this.state.issues
+                    
+                    }
+                
+                    
+                axios.post('http://localhost:8080/projects/add', data, headers)
+                    .then((res) => {
+                        Swal.fire(res.data, '', 'success');
+                    this.props.history.push({pathname:'/projects'});
+                    })
+                    .catch((err) => {
+                        Swal.fire(err.response.data, '', 'error');
+                    }); 
+        }
     }
     change=e=>{
-       // console.log(e.target.name);
+ 
          this.setState({
             [e.target.name]:e.target.value
             });
@@ -90,7 +85,6 @@ export default class NewProject extends Component{
             if(field == 'issueName'){
                 console.log(this.state.issue.issueName);
                 this.state.issue.issueName = value;
-               // console.log(this.state.zadatak.nazivZadatka);
                  }
          }
     
@@ -131,8 +125,12 @@ handleDateChange = (dateName, dateValue) => {
                 [dateName]: dateValue
         })
     }
-dodaj=e=>{
+addIssue=e=>{
         e.preventDefault();
+        if(this.state.issueName.length==0 || this.state.issueDescription.length==0 || this.state.storyPoint.length==0 || this.state.status.length==0){
+            Swal.fire('Fields can not be empty', '', 'error');
+            return;
+        }
         let issues = this.state.issues;
         let issue = {
             issueName : this.state.issueName,
@@ -151,6 +149,11 @@ dodaj=e=>{
    
      console.log(this.state);
    
+}
+goToHomePage(){
+
+    this.props.history.push("/adminmain");
+
 }
     render(){
          types=this.getProjectTypes(this.state.types);
@@ -243,9 +246,13 @@ dodaj=e=>{
            <p><button 
             className="btn btn-lg btn-primary btn-block"
             type="submit"
-            onClick={e=>this.dodaj(e)}>Add Issue</button></p>  
+            onClick={e=>this.addIssue(e)}>Add Issue</button></p>  
       </form>
-               
+               <hr/>
+               <button 
+                 className="btn btn-lg btn-primary btn-block"
+                 type="submit"
+                 onClick={e=>this.goToHomePage()}>Back to home page</button>
 
 </div>
         );

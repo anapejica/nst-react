@@ -42,15 +42,14 @@ class Login extends Component {
                     'Content-Type': 'application/json;charset=UTF-8'
                 }
             }
-            
-    
-           // const encryptedPassword = bcrypt.hashSync(this.state.password, 16);
-    
    
+           
+
             var data = {
                 "username": this.state.username,
                 "password": this.state.password
             }
+            console.log(headers)
             axios.post('http://localhost:8080/login', data, headers)
 
             .then((res) => {
@@ -66,7 +65,10 @@ class Login extends Component {
              this.setState({loggedUser}, this.goToHomePage);
                 
             })
-        } else {
+            .catch((err) => {
+               Swal.fire(err.response.data, '', 'error');
+            });
+        } else { 
             Swal.fire('Fields can not be empty', '', 'error');
         }
     }

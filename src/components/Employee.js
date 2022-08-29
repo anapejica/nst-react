@@ -9,7 +9,7 @@ import "./../css/Login.css"
 
  
 
-export default class Zaposleni extends Component{
+export default class Employee extends Component{
   constructor(props){
     super(props);
     this.state={
@@ -41,18 +41,12 @@ export default class Zaposleni extends Component{
         let path = 'http://localhost:8080/employees/employee';  
         axios.post(path, data, {headers:{id:this.state.employeeId}})
             .then((res) => {
-            if(this.state.new==true){
-                Confirmation.fire('You have added employee successfully', '', 'success');
-            }else { 
-                Confirmation.fire('You have updated employee successfully', '', 'success');
-           };
-            
-            this.setState({gotovo:true});
-            this.props.history.push({pathname:'/employees'});
-
+                Confirmation.fire(res.data, '', 'success');            
+                this.setState({gotovo:true});
+                this.props.history.push({pathname:'/employees'});
             })
             .catch((err) => {
-                Swal.fire('Save error', '', 'error');
+                Swal.fire("Error save", '', 'error');
             });
     }
     
@@ -92,8 +86,14 @@ export default class Zaposleni extends Component{
             type="submit"
             onClick={e=>this.submit(e)}>Save</button></p>
       </form>
+              <button 
+                 className="btn btn-lg btn-primary btn-block"
+                 type="submit"
+                 onClick={e=>this.props.history.push("/employees")}>Back to Employee page</button>
       </div>
+       
         );
+
     
     }
 }

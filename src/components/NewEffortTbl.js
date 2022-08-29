@@ -24,12 +24,10 @@ export default class NewEffortTbl extends Component{
        }
  componentDidMount(){
         let id = localStorage.getItem("managerId");
-     //   console.log('issue je '+this.state.issue)
         axios.get('http://localhost:8080/employees', {headers:{id:id}})
        .then(res=>{
         const employees=res.data;
         this.setState({employees});
-    //    console.log(zaposleni);
     })
     .catch((err) => {
             alert("Nece get");
@@ -83,22 +81,11 @@ handleEmployeeChange = (labelName,labelValue)=>{
     axios.post('http://localhost:8080/projects/effort', data,{headers:{projectId:projectId,issueId:issueId}})
 
         .then((res) => {
+            Swal.fire(res.data,'','success');
            
-           Swal({
-            position: 'center',
-            type: 'success',
-            title: 'Uspesno dodat novi ucinak',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        this.setState({gotovo:true});
-       
         })
         .catch((err) => {
-            Swal({
-                type:'error',
-                text:'Nisu dobro uneti podaci!'
-            });
+            Swal.fire("Error while saving effort",'','error');
         });
    
 
@@ -137,6 +124,7 @@ render(){
             type="submit"
             onClick={e=>this.submit(e)}>Save effort</button>
         </p>
+
            </div>
         );
     }
